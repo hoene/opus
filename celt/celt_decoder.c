@@ -534,7 +534,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
 
    loss_count = st->loss_count;
    start = st->start;
-   noise_based = loss_count >= 5 || start != 0 || st->skip_plc;
+   noise_based = loss_count >= 2 || start != 0 || st->skip_plc;
    if (noise_based)
    {
       /* Noise-based PLC/CNG */
@@ -559,7 +559,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
 #endif
 
       /* Energy decay */
-      decay = loss_count==0 ? QCONST16(1.5f, DB_SHIFT) : QCONST16(.5f, DB_SHIFT);
+      decay = loss_count==0 ? QCONST16(1.5f, DB_SHIFT) : QCONST16(1.f, DB_SHIFT);
       c=0; do
       {
          for (i=start;i<end;i++)
@@ -607,7 +607,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
          st->last_pitch_index = pitch_index = celt_plc_pitch_search(decode_mem, C, st->arch);
       } else {
          pitch_index = st->last_pitch_index;
-         fade = QCONST16(.8f,15);
+         fade = QCONST16(1.8f,15);
       }
 
       /* We want the excitation for 2 pitch periods in order to look for a
@@ -1152,7 +1152,7 @@ int celt_decode_with_ec(CELTDecoder * OPUS_RESTRICT st, const unsigned char *dat
       if (st->loss_count < 10)
          max_background_increase = M*QCONST16(0.001f,DB_SHIFT);
       else
-         max_background_increase = QCONST16(1.f,DB_SHIFT);
+         max_background_increase = QCONST16(0.f,DB_SHIFT);
       for (i=0;i<2*nbEBands;i++)
          backgroundLogE[i] = MIN16(backgroundLogE[i] + max_background_increase, oldBandE[i]);
    } else {
