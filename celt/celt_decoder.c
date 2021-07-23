@@ -528,7 +528,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
 
    loss_count = st->loss_count;
    start = st->start;
-   noise_based = loss_count >= 1 || start != 0 || st->skip_plc;
+   noise_based = loss_count >= 5 || start != 0 || st->skip_plc;
    if (noise_based)
    {
       /* Noise-based PLC/CNG */
@@ -601,7 +601,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
          st->last_pitch_index = pitch_index = celt_plc_pitch_search(decode_mem, C, st->arch);
       } else {
          pitch_index = st->last_pitch_index;
-         fade = QCONST16(.8f,15);
+         fade = QCONST16(1.6f,15);
       }
 
       /* We want the excitation for 2 pitch periods in order to look for a
