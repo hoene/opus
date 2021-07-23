@@ -528,7 +528,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
 
    loss_count = st->loss_count;
    start = st->start;
-   noise_based = loss_count >= 5 || start != 0 || st->skip_plc;
+   noise_based = loss_count >= 1 || start != 0 || st->skip_plc;
    if (noise_based)
    {
       /* Noise-based PLC/CNG */
@@ -553,7 +553,7 @@ static void celt_decode_lost(CELTDecoder * OPUS_RESTRICT st, int N, int LM)
 #endif
 
       /* Energy decay */
-      decay = loss_count==0 ? QCONST16(1.5f, DB_SHIFT) : QCONST16(.5f, DB_SHIFT);
+      decay = loss_count==0 ? QCONST16(1.5f, DB_SHIFT) : QCONST16(1.f, DB_SHIFT);
       c=0; do
       {
          for (i=start;i<end;i++)
